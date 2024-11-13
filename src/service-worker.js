@@ -73,6 +73,26 @@ registerRoute(({url}) => url.origin === 'https://fonts.googleapis.com' || url.or
   ]
  }))
 
+ registerRoute(({url}) => url.origin.includes('https://donasi.lazpersada.org'), new NetworkFirst({
+  cacheName: 'apiData',
+  plugins:[
+    new ExpirationPlugin({
+      maxAgeSeconds: 360,
+      maxEntries: 12
+    })
+  ]
+ }) )
+
+registerRoute(({url}) => /\.(jp?g|png|ico|svg|)$/i.test(url.pathname), new StaleWhileRevalidate({
+  cacheName: 'apiImage',
+  plugins:[
+    new ExpirationPlugin({
+      maxAgeSeconds: 360,
+      maxEntries: 12
+    })
+  ]
+}))
+
 self.addEventListener('install', function(e){
   console.log('sw installed')
 
