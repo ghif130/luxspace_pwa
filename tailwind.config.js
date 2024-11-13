@@ -14,10 +14,11 @@ module.exports = {
   purge: {
     // enabled: true,
     // content: ["./**/*.html", "./**/*.js"],
-    content: ['./src/**/*.{js, jsx}'],
+    // content: ['./src/**/*.{js, jsx}'],
   },
-  presets: [],
-  darkMode: false, // or 'media' or 'class'
+  content: ['./src/**/*.{js, jsx}'],
+  // presets: [],
+  darkMode: true, // or 'media' or 'class'
   theme: {
     screens: {
       sm: "640px",
