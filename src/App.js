@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Browse from './components/Browse';
@@ -7,12 +8,19 @@ import Client from './components/Client';
 import Aside from './components/Aside';
 import Footer from './components/Footer';
 import Offline from './components/Offline';
+import Splash from './pages/Splash';
+import Profile from './pages/Profile';
 
 function App() {
   // const [items, setItems] = React.useState([])
   const [items, setItems] = useState([])
   const [offline, setOffline] = useState(!navigator.onLine)
+  const [isLoading, setIsLoading] = useState(true)
     // const [data, setData] = useState(null);
+
+  setTimeout( () => {
+    setIsLoading(false)
+  }, 1500)
 
   function handleOffline(){
     setOffline(!navigator.onLine)
@@ -71,16 +79,55 @@ function App() {
 
   return (
     <>
-      {offline && <Offline />}
-      <Header />    
-      <Hero />
-      <Browse />
-      <Arrive items={items}/>
-      <Client />
-      <Aside />
-      <Footer />
+      {isLoading ? <Splash /> : 
+        (
+          <>
+            {offline && <Offline />}
+            <Header />    
+            <Hero />
+            <Browse />
+            <Arrive items={items}/>
+            <Client />
+            <Aside />
+            <Footer />
+          </>
+        )
+      }            
     </>
   );
 }
 
-export default App;
+export default function Navigate(){
+  const router = createBrowserRouter(
+    [
+      {    
+        path: "/", children: [{ path: "/", element: <App /> }],
+      },
+      {    
+        path: "/profile", children: [{ path: "/profile", element: <Profile /> }],
+      }
+    ],
+    {future: 
+      {
+        v7_fetcherPersist: true,
+        v7_normalizeFormMethod: true,
+        v7_partialHydration: true,
+        v7_relativeSplatPath: true,
+        v7_skipActionErrorRevalidation: true,
+      }
+    }
+  )
+
+  return(
+    <RouterProvider router={router} future={{ v7_startTransition: true }} />
+    // <Router router={router} future={{ v7_startTransition: true }}>
+    //   <Routes>
+    //     <Route path="/">
+    //       <Route path="/" element={<App />} />
+    //    </Route>
+    //     {/* <Route path="/" exact element={<App />}/>
+    //     <Route path="/profile" exact element={<Profile />}/> */}
+    //   </Routes>
+    // </Router>
+  )
+};
